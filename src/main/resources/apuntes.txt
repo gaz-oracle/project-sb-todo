@@ -1,1 +1,36 @@
 1. dentro de un paquete de utilidades mantenemos todas las clases de utilidad
+
+package pe.edu.galaxy.training.java.sb.dev.appdemodb.v1.repository;
+
+import java.util.List;
+
+
+@Repository
+public interface ClienteRepository extends JpaRepository<ClienteEntity, Long>{
+
+
+	@Query("select c from Cliente c where c.estado='1'")
+	List<ClienteEntity> findAllCustom();
+
+	@Query("select c from Cliente c where upper(c.razonSocial) like upper(:razonSocial) and c.estado='1'")
+	List<ClienteEntity> getByRazonSocial(@Param("razonSocial") String razonSocial); // JPQL (Java Persistence Query Language)
+
+}
+
+@DeleteMapping("/logico/{id}") //Update
+	public void eliminarLogico(@PathVariable Long id) {
+		clienteService.eliminarLogico(id);
+	}
+
+
+		void eliminarLogico(Long id);
+
+			@Override
+        	public void eliminarLogico(Long id) {
+        		// Todo
+        		ClienteEntity resCliente = clienteRepository.findById(id).orElse(null);
+        		if (!Objects.isNull(resCliente)) {
+        			resCliente.setEstado("0");
+        			clienteRepository.save(resCliente);
+        		}
+        	}
